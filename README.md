@@ -136,14 +136,15 @@ python scripts/simulate_attacks.py --num-per-class 10 --delay 0.5
 
 ## Citation
 
-If you use FlowFusion or this benchmarking suite in your research, please cite our work:
+If you use FlowFusion or this benchmarking suite in your work or research, please cite our project report:
 
 ```bibtex
-@article{sharma2026flowfusion,
+@misc{flowfusion2026,
   title={FlowFusion: A Leakage-Free Benchmark and Architecture for DDoS Detection},
-  author={Sharma, Tanish},
-  journal={Research Report},
-  year={2026}
+  author={Tanish Sharma and Ronit Yadav},
+  year={2026},
+  howpublished={Academic Coursework Project Report},
+  url={https://github.com/TanishDevX/DDOS-FlowFusion}
 }
 ```
 
