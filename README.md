@@ -78,7 +78,7 @@ DDOS/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/DDOS-FlowFusion.git
+git clone https://github.com/TanishDevX/DDOS-FlowFusion.git
 cd DDOS-FlowFusion
 
 # 2. Create and activate a virtual environment
@@ -136,16 +136,18 @@ python scripts/simulate_attacks.py --num-per-class 10 --delay 0.5
 
 ## Citation
 
-If you use FlowFusion or this benchmarking suite in your research, please cite our paper:
+If you use FlowFusion or this benchmarking suite in your research, please cite our work:
 
 ```bibtex
-@article{yourlastname2026flowfusion,
+@article{sharma2026flowfusion,
   title={FlowFusion: A Leakage-Free Benchmark and Architecture for DDoS Detection},
-  author={Your Name and Co-Authors},
-  journal={Journal/Conference Name},
+  author={Sharma, Tanish},
+  journal={Research Report},
   year={2026}
 }
 ```
 
 ## License
-MIT License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
