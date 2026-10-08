@@ -141,7 +141,7 @@ If you use FlowFusion or this benchmarking suite in your work or research, pleas
 ```bibtex
 @misc{flowfusion2026,
   title={FlowFusion: A Leakage-Free Benchmark and Architecture for DDoS Detection},
-  author={Tanish Sharma and Ronit Yadav},
+  author={Tanish Sharma},
   year={2026},
   howpublished={Academic Coursework Project Report},
   url={https://github.com/TanishDevX/DDOS-FlowFusion}
