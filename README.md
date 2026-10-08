@@ -1,10 +1,30 @@
 # FlowFusion: A Leakage-Free Benchmark and Architecture for DDoS Detection
 
+![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+[![Paper](https://img.shields.io/badge/Paper-PDF-red.svg)](./paper/FlowFusion_DDoS_Report.pdf)
+
 ## Overview
 
-This repository contains an academic benchmarking suite and a novel neural network architecture (`FlowFusion`) designed for robust DDoS traffic detection. The core problem this project addresses is **temporal data leakage** in network intrusion detection systems (NIDS). By strictly separating the training dataset (January 12th) from the testing dataset (March 11th) on the CIC-DDoS2019 dataset, and aggressively dropping leaky features (e.g., `Inbound`, `Timestamp`), this project provides a rigorous real-world evaluation.
+This repository contains the official code and research report for **[FlowFusion: A Leakage-Free Benchmark and Architecture for DDoS Detection](./paper/FlowFusion_DDoS_Report.pdf)**. 
+
+We provide an academic benchmarking suite and a novel neural network architecture (`FlowFusion`) designed for robust DDoS traffic detection. The core problem this project addresses is **temporal data leakage** in network intrusion detection systems (NIDS). By strictly separating the training dataset (January 12th) from the testing dataset (March 11th) on the CIC-DDoS2019 dataset, and aggressively dropping leaky features (e.g., `Inbound`, `Timestamp`), this project provides a rigorous real-world evaluation.
 
 Furthermore, we propose **FlowFusion**, a multi-branch deep learning model that leverages a Feature Interaction Network (FIN) and Structural Group Attention to analyze non-linear interactions across tabular networking features, achieving near state-of-the-art accuracy while maintaining high model interpretability.
+
+## Results & Performance
+
+Our evaluation against strong baseline models demonstrates the trade-off between architectural complexity (feature interaction discovery) and raw inference latency.
+
+| Model | Accuracy | Macro-F1 | ROC-AUC | Latency (ms/flow) |
+|-------|----------|----------|---------|-------------------|
+| **XGBoost** | 0.9888 | 0.9898 | 0.9990 | **0.761** |
+| **LightGBM** | 0.9877 | 0.9888 | 0.9990 | 1.409 |
+| **FlowFusion** | **0.9853** | **0.9868** | **0.9986** | 73.381 |
+| **MLP** | 0.9817 | 0.9835 | 0.9983 | 78.035 |
+| **FT-Transformer** | 0.9566 | 0.9216 | 0.9983 | 79.820 |
+
+*Note: FlowFusion significantly outperforms standard Deep Learning tabular models (MLP, FT-Transformer) in accuracy while providing crucial structural explainability (Gate Values), making it highly valuable for Tier-2 offline analysis and Feature Interaction Discovery.*
 
 ## Features
 
@@ -26,6 +46,8 @@ The project consists of three major pipelines:
 
 ```text
 DDOS/
+├── paper/                   # Research paper & report
+│   └── FlowFusion_DDoS_Report.pdf 
 ├── config/
 │   └── config.yaml          # Centralized hyperparameter and configuration hub
 ├── data/
@@ -112,9 +134,18 @@ Then, in a new terminal, run the attack simulator which streams actual test vect
 python scripts/simulate_attacks.py --num-per-class 10 --delay 0.5
 ```
 
-## Future Improvements
-- **Live Packet Capture Integration**: Porting the pipeline to ingest live network interfaces via PCAP/eBPF instead of dataset vectors.
-- **Open-Set Anomaly Detection**: Implementing an autoencoder pipeline to flag Zero-Day DDoS attacks not present in the 6 primary classes.
+## Citation
+
+If you use FlowFusion or this benchmarking suite in your research, please cite our paper:
+
+```bibtex
+@article{yourlastname2026flowfusion,
+  title={FlowFusion: A Leakage-Free Benchmark and Architecture for DDoS Detection},
+  author={Your Name and Co-Authors},
+  journal={Journal/Conference Name},
+  year={2026}
+}
+```
 
 ## License
 MIT License
