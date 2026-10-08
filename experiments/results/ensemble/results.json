@@ -1,0 +1,50 @@
+{
+  "model": "FlowFusion_v2_LightGBM_Ensemble",
+  "best_alpha": 0.41000000000000003,
+  "best_val_macro_f1": 0.9895136778225911,
+  "ff_standalone_test_macro_f1": 0.9887005210436587,
+  "lgbm_standalone_test_macro_f1": 0.9889873768159888,
+  "ensemble_test_macro_f1": 0.9894793124648379,
+  "test_metrics": {
+    "accuracy": 0.9885155166712113,
+    "macro_f1": 0.9894793124648379,
+    "weighted_f1": 0.9885141496542205,
+    "macro_precision": 0.9889371267831782,
+    "macro_recall": 0.9900636777403213,
+    "f1_BENIGN": 0.9954987632524276,
+    "f1_DrDoS_LDAP": 0.9850831958758286,
+    "f1_DrDoS_MSSQL": 0.9715166044173236,
+    "f1_DrDoS_NetBIOS": 0.9993712475558937,
+    "f1_DrDoS_UDP": 0.9864586146597001,
+    "f1_Syn": 0.9989474490278543,
+    "roc_auc": NaN
+  },
+  "ff_standalone_metrics": {
+    "accuracy": 0.987698636018171,
+    "macro_f1": 0.9887005210436587,
+    "weighted_f1": 0.9877121063067374,
+    "macro_precision": 0.9880486432821683,
+    "macro_recall": 0.9893863605353116,
+    "f1_BENIGN": 0.9948649875991197,
+    "f1_DrDoS_LDAP": 0.9833747857133266,
+    "f1_DrDoS_MSSQL": 0.9700162535433023,
+    "f1_DrDoS_NetBIOS": 0.9988543801566031,
+    "f1_DrDoS_UDP": 0.9861768684477511,
+    "f1_Syn": 0.99891585080185,
+    "roc_auc": NaN
+  },
+  "lgbm_standalone_metrics": {
+    "accuracy": 0.9878425184059224,
+    "macro_f1": 0.9889873768159888,
+    "weighted_f1": 0.9878331750878907,
+    "macro_precision": 0.9885589131753744,
+    "macro_recall": 0.9894545678886941,
+    "f1_BENIGN": 0.9961858105152656,
+    "f1_DrDoS_LDAP": 0.9849048914458077,
+    "f1_DrDoS_MSSQL": 0.9698071741453795,
+    "f1_DrDoS_NetBIOS": 0.9992635401370625,
+    "f1_DrDoS_UDP": 0.9847447204856611,
+    "f1_Syn": 0.9990181241667567,
+    "roc_auc": 0.998944098173631
+  }
+}

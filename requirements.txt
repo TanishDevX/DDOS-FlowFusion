@@ -1,0 +1,41 @@
+# Pinned versions — installed 2026-06-23
+# Generated from: pip freeze
+
+# Core ML
+tensorflow==2.21.0
+xgboost==3.2.0
+lightgbm==4.6.0
+scikit-learn==1.9.0
+
+# Hyperparameter Optimization
+optuna>=3.6.0
+
+# Data
+pandas==3.0.3
+numpy==2.4.6
+pyarrow>=12.0.0
+
+# Explainability
+shap==0.51.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Statistical tests
+scipy>=1.11.0
+
+# Config
+pyyaml>=6.0
+
+# Serialization
+joblib>=1.3.0
+
+# Deployment & Simulation
+fastapi==0.138.0
+uvicorn>=0.23.0
+python-multipart>=0.0.6
+requests>=2.31.0
+
+# Utilities
+tqdm>=4.65.0

@@ -1,0 +1,9 @@
+Config,Branches,Fusion,Macro-F1,Accuracy,ROC-AUC
+b1_only,"(True, False, False)",gated,0.9877 ± 0.0000,0.9867 ± 0.0000,0.9986 ± 0.0000
+b2_only,"(False, True, False)",gated,0.9734 ± 0.0000,0.9746 ± 0.0000,0.9975 ± 0.0000
+b3_only,"(False, False, True)",gated,0.9839 ± 0.0000,0.9833 ± 0.0000,0.9982 ± 0.0000
+b1_b2,"(True, True, False)",gated,0.9875 ± 0.0000,0.9863 ± 0.0000,0.9985 ± 0.0000
+b1_b3,"(True, False, True)",gated,0.9876 ± 0.0000,0.9867 ± 0.0000,0.9986 ± 0.0000
+b2_b3,"(False, True, True)",gated,0.9823 ± 0.0000,0.9824 ± 0.0000,0.9982 ± 0.0000
+all_concat,"(True, True, True)",concat,0.9880 ± 0.0000,0.9868 ± 0.0000,0.9987 ± 0.0000
+all_gated,"(True, True, True)",gated,0.9881 ± 0.0000,0.9868 ± 0.0000,0.9986 ± 0.0000

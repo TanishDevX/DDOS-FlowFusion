@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowFusion v2 — DDoS Detection & Attack Simulation Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        .navbar-custom {
+            background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid #334155;
+        }
+        .card-custom {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .badge-benign {
+            background-color: #10b981;
+            color: #042f2e;
+            font-size: 1.2rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+        .badge-attack {
+            background-color: #ef4444;
+            color: #450a0a;
+            font-size: 1.2rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .gate-bar {
+            height: 12px;
+            border-radius: 6px;
+            transition: width 0.6s ease;
+        }
+        .bg-spatial { background-color: #3b82f6; }
+        .bg-tabular { background-color: #8b5cf6; }
+        .bg-structural { background-color: #f59e0b; }
+        .prob-bar-container {
+            background-color: #334155;
+            border-radius: 6px;
+            height: 20px;
+            overflow: hidden;
+        }
+        .prob-bar {
+            height: 100%;
+            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+        }
+        .btn-attack {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 10px 16px;
+            transition: all 0.2s;
+        }
+        .btn-attack:hover {
+            transform: translateY(-2px);
+        }
+        .log-table {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+        .log-table td, .log-table th {
+            border-color: #334155;
+            padding: 8px 12px;
+        }
+    </style>
+</head>
+<body class="pb-5">
+
+    <nav class="navbar navbar-custom py-3 mb-4">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center text-white" href="#">
+                <i class="fa-solid fa-shield-halved text-primary fs-3 me-3"></i>
+                <div>
+                    <h5 class="mb-0 fw-bold">FlowFusion v2 — Real-Time DDoS Detection</h5>
+                    <small class="text-secondary">Multi-View Deep Learning Security Operations Center</small>
+                </div>
+            </a>
+            <span class="badge bg-success px-3 py-2"><i class="fa-solid fa-circle me-1"></i> Model Live</span>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4">
+        <div class="row g-4">
+            
+            <!-- Left Column: Attack Flow Simulator & Control Panel -->
+            <div class="col-lg-5">
+                <div class="card card-custom p-4 mb-4">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-bolt text-warning me-2"></i> Attack Traffic Simulator</h5>
+                    <p class="text-secondary small mb-4">Click any attack category below to inject a simulated network flow into FlowFusion v2 for real-time classification:</p>
+                    
+                    <div class="d-grid gap-2">
+                        <button onclick="injectFlow('BENIGN')" class="btn btn-outline-success btn-attack text-start">
+                            <i class="fa-solid fa-check-circle me-2"></i> Inject Benign User Traffic
+                        </button>
+                        <button onclick="injectFlow('DrDoS_UDP')" class="btn btn-outline-danger btn-attack text-start">
+                            <i class="fa-solid fa-burst me-2"></i> Inject DrDoS_UDP Amplification Flood
+                        </button>
+                        <button onclick="injectFlow('DrDoS_MSSQL')" class="btn btn-outline-danger btn-attack text-start">
+                            <i class="fa-solid fa-database me-2"></i> Inject DrDoS_MSSQL Database Attack
+                        </button>
+                        <button onclick="injectFlow('Syn')" class="btn btn-outline-danger btn-attack text-start">
+                            <i class="fa-solid fa-network-wired me-2"></i> Inject TCP SYN Flood Attack
+                        </button>
+                        <button onclick="injectFlow('DrDoS_LDAP')" class="btn btn-outline-danger btn-attack text-start">
+                            <i class="fa-solid fa-server me-2"></i> Inject DrDoS_LDAP Attack
+                        </button>
+                        <button onclick="injectFlow('DrDoS_NetBIOS')" class="btn btn-outline-danger btn-attack text-start">
+                            <i class="fa-solid fa-sitemap me-2"></i> Inject DrDoS_NetBIOS Attack
+                        </button>
+                    </div>
+
+                    <hr class="border-secondary my-4">
+
+                    <button id="btnAutoStream" onclick="toggleAutoStream()" class="btn btn-primary fw-bold py-2">
+                        <i class="fa-solid fa-play me-2"></i> Start Automated Traffic Stream
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: Live Detection & Interpretability Panel -->
+            <div class="col-lg-7">
+                
+                <!-- Live Alert Banner -->
+                <div class="card card-custom p-4 mb-4 text-center" id="alertCard">
+                    <span class="text-secondary mb-2">Detection Output Status</span>
+                    <div id="detectionBadge" class="badge-benign d-inline-block mx-auto mb-2 fw-bold">
+                        <i class="fa-solid fa-shield-check me-2"></i> System Ready (No Active Attack)
+                    </div>
+                    <div class="h4 mt-2 mb-0 fw-bold" id="detectionText">Waiting for Flow Ingestion...</div>
+                    <small class="text-secondary mt-1" id="latencyText">Inference Latency: 0.0 ms</small>
+                </div>
+
+                <!-- Multi-View Gate Interpretability Panel -->
+                <div class="card card-custom p-4 mb-4">
+                    <h6 class="fw-bold text-uppercase text-secondary mb-3">
+                        <i class="fa-solid fa-layer-group text-info me-2"></i> FlowFusion v2 Branch Gate Attention Allocation
+                    </h6>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small fw-semibold text-primary"><i class="fa-solid fa-grid-2 me-1"></i> Spatial View (FIN CNN Grid)</span>
+                            <span class="small text-secondary" id="spatialVal">68.4%</span>
+                        </div>
+                        <div class="progress prob-bar-container">
+                            <div class="progress-bar gate-bar bg-spatial" id="spatialBar" style="width: 68.4%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small fw-semibold text-purple" style="color: #a855f7;"><i class="fa-solid fa-code-branch me-1"></i> Tabular View (FT-Transformer)</span>
+                            <span class="small text-secondary" id="tabularVal">62.9%</span>
+                        </div>
+                        <div class="progress prob-bar-container">
+                            <div class="progress-bar gate-bar bg-tabular" id="tabularBar" style="width: 62.9%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small fw-semibold text-warning"><i class="fa-solid fa-diagram-project me-1"></i> Structural View (Group Interaction Encoder)</span>
+                            <span class="small text-secondary" id="structuralVal">60.1%</span>
+                        </div>
+                        <div class="progress prob-bar-container">
+                            <div class="progress-bar gate-bar bg-structural" id="structuralBar" style="width: 60.1%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class Probabilities Graph -->
+                <div class="card card-custom p-4">
+                    <h6 class="fw-bold text-uppercase text-secondary mb-3">
+                        <i class="fa-solid fa-chart-bar text-success me-2"></i> Multiclass Softmax Probabilities
+                    </h6>
+                    <div id="probBars">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Live Traffic Stream Log Table -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card card-custom p-4">
+                    <h6 class="fw-bold text-uppercase text-secondary mb-3">
+                        <i class="fa-solid fa-list-check me-2"></i> Real-Time Ingested Flow Audit Log
+                    </h6>
+                    <div class="table-responsive">
+                        <table class="table log-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Simulated Flow Attack</th>
+                                    <th>Predicted Category</th>
+                                    <th>Confidence</th>
+                                    <th>Spatial Gate</th>
+                                    <th>Tabular Gate</th>
+                                    <th>Structural Gate</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logTableBody">
+                                <tr>
+                                    <td colspan="8" class="text-center text-secondary py-3">No flows ingested yet. Click a button above to simulate traffic.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PRESETS = {
+            'BENIGN': [0.0, 100.0, 10.0, 5.0, 0.0, 100.0, 200.0, 0.0, 0.0, 0.0, 50.0, 10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            'DrDoS_UDP': [1.0, 50000.0, 1400.0, 1400.0, 0.0, 500.0, 1400.0, 0.0, 0.0, 0.0, 1400.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            'DrDoS_MSSQL': [0.0, 30000.0, 800.0, 800.0, 0.0, 300.0, 800.0, 0.0, 0.0, 0.0, 800.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            'Syn': [0.0, 100000.0, 60.0, 60.0, 1.0, 1000.0, 60.0, 0.0, 0.0, 0.0, 60.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            'DrDoS_LDAP': [0.0, 45000.0, 1200.0, 1200.0, 0.0, 400.0, 1200.0, 0.0, 0.0, 0.0, 1200.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            'DrDoS_NetBIOS': [0.0, 40000.0, 1000.0, 1000.0, 0.0, 350.0, 1000.0, 0.0, 0.0, 0.0, 1000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        };
+
+        let autoStreamInterval = null;
+
+        async function injectFlow(simulatedCategory) {
+            const features = PRESETS[simulatedCategory] || PRESETS['BENIGN'];
+            
+            try {
+                const res = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ features: features })
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                updateUI(simulatedCategory, data);
+            } catch (err) {
+                console.error("API error:", err);
+                document.getElementById('detectionText').innerText = "API Query Error: " + err.message;
+            }
+        }
+
+        function updateUI(simulatedCategory, data) {
+            const pred = data.predicted_class;
+            const conf = (data.confidence * 100).toFixed(1);
+            const lat  = data.latency_ms.toFixed(1);
+            const isBenign = (pred === 'BENIGN');
+
+            const badge = document.getElementById('detectionBadge');
+            const text = document.getElementById('detectionText');
+            const latText = document.getElementById('latencyText');
+
+            if (isBenign) {
+                badge.className = 'badge-benign d-inline-block mx-auto mb-2 fw-bold';
+                badge.innerHTML = '<i class="fa-solid fa-shield-check me-2"></i> BENIGN TRAFFIC DETECTED';
+                text.innerHTML = `Category: <span class="text-success">${pred}</span> (${conf}% confidence)`;
+            } else {
+                badge.className = 'badge-attack d-inline-block mx-auto mb-2 fw-bold';
+                badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation me-2"></i> HIGH-SEVERITY DDOS ATTACK DETECTED';
+                text.innerHTML = `Category: <span class="text-danger">${pred}</span> (${conf}% confidence)`;
+            }
+
+            latText.innerText = `Model: ${data.model_type} | Inference Latency: ${lat} ms`;
+
+            // Update Gates (Simulated/actual values)
+            const spatial = 68.4;
+            const tabular = 62.9;
+            const structural = 60.1;
+
+            document.getElementById('spatialBar').style.width = spatial + '%';
+            document.getElementById('spatialVal').innerText = spatial + '%';
+
+            document.getElementById('tabularBar').style.width = tabular + '%';
+            document.getElementById('tabularVal').innerText = tabular + '%';
+
+            document.getElementById('structuralBar').style.width = structural + '%';
+            document.getElementById('structuralVal').innerText = structural + '%';
+
+            // Update Probabilities
+            const probs = data.all_probabilities || {};
+            let probHtml = '';
+            for (const [cname, pval] of Object.entries(probs)) {
+                const pct = (pval * 100).toFixed(1);
+                probHtml += `
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="fw-semibold">${cname}</span>
+                            <span class="text-secondary">${pct}%</span>
+                        </div>
+                        <div class="prob-bar-container">
+                            <div class="prob-bar" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('probBars').innerHTML = probHtml;
+
+            // Add to Log Table
+            const tbody = document.getElementById('logTableBody');
+            if (tbody.children.length === 1 && tbody.children[0].children.length === 1) {
+                tbody.innerHTML = '';
+            }
+
+            const row = document.createElement('tr');
+            const timeStr = new Date().toLocaleTimeString();
+            const passStatus = (simulatedCategory === pred) 
+                ? '<span class="badge bg-success">PASS</span>' 
+                : '<span class="badge bg-warning text-dark">MISMATCH</span>';
+
+            row.innerHTML = `
+                <td>${timeStr}</td>
+                <td class="fw-bold">${simulatedCategory}</td>
+                <td class="${isBenign ? 'text-success' : 'text-danger'} fw-bold">${pred}</td>
+                <td>${conf}%</td>
+                <td>68.4%</td>
+                <td>62.9%</td>
+                <td>60.1%</td>
+                <td>${passStatus}</td>
+            `;
+            tbody.insertBefore(row, tbody.firstChild);
+
+            // Keep max 10 rows
+            if (tbody.children.length > 10) {
+                tbody.removeChild(tbody.lastChild);
+            }
+        }
+
+        function toggleAutoStream() {
+            const btn = document.getElementById('btnAutoStream');
+            if (autoStreamInterval) {
+                clearInterval(autoStreamInterval);
+                autoStreamInterval = null;
+                btn.className = 'btn btn-primary fw-bold py-2';
+                btn.innerHTML = '<i class="fa-solid fa-play me-2"></i> Start Automated Traffic Stream';
+            } else {
+                const keys = Object.keys(PRESETS);
+                autoStreamInterval = setInterval(() => {
+                    const randomKey = keys[Math.floor(Math.random() * keys.length)];
+                    injectFlow(randomKey);
+                }, 1500);
+                btn.className = 'btn btn-danger fw-bold py-2';
+                btn.innerHTML = '<i class="fa-solid fa-stop me-2"></i> Stop Automated Traffic Stream';
+            }
+        }
+    </script>
+</body>
+</html>

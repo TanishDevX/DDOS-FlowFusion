@@ -1,0 +1,54 @@
+# Raw data — never commit (too large)
+data/raw/
+data/processed/
+data/payload/
+
+# Model weights and checkpoints
+models/
+*.keras
+*.h5
+*.joblib
+*.pkl
+
+# Experiment results (large files)
+experiments/results/*.npz
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+env/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE & Testing
+.vscode/
+.idea/
+.pytest_cache/
+.mypy_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Archives (large — never commit)
+*.tar.gz
+*.zip
+*.tar.bz2
+*.gz
+
+# Scratch / audit output text dumps
+scratch/
+verify_*.txt
+report_*.txt
+*_check.txt
+*_out.txt
+*_inspection.txt

@@ -1,0 +1,151 @@
+{
+  "ablation": "b2_only",
+  "branch_flags": [
+    false,
+    true,
+    false
+  ],
+  "fusion_mode": "gated",
+  "seeds": [
+    42
+  ],
+  "val_aggregated": {
+    "accuracy": {
+      "mean": 0.9769,
+      "std": 0.0
+    },
+    "macro_f1": {
+      "mean": 0.9768338144956461,
+      "std": 0.0
+    },
+    "weighted_f1": {
+      "mean": 0.9768338144956461,
+      "std": 0.0
+    },
+    "macro_precision": {
+      "mean": 0.9770060615727308,
+      "std": 0.0
+    },
+    "macro_recall": {
+      "mean": 0.9769,
+      "std": 0.0
+    },
+    "f1_BENIGN": {
+      "mean": 0.9960902255639098,
+      "std": 0.0
+    },
+    "f1_DrDoS_LDAP": {
+      "mean": 0.9714901538160087,
+      "std": 0.0
+    },
+    "f1_DrDoS_MSSQL": {
+      "mean": 0.9378875673477687,
+      "std": 0.0
+    },
+    "f1_DrDoS_NetBIOS": {
+      "mean": 0.9903381642512077,
+      "std": 0.0
+    },
+    "f1_DrDoS_UDP": {
+      "mean": 0.9683916641738957,
+      "std": 0.0
+    },
+    "f1_Syn": {
+      "mean": 0.9968051118210862,
+      "std": 0.0
+    },
+    "roc_auc": {
+      "mean": 0.9969850306666667,
+      "std": 0.0
+    }
+  },
+  "test_aggregated": {
+    "accuracy": {
+      "mean": 0.9745954758271786,
+      "std": 0.0
+    },
+    "macro_f1": {
+      "mean": 0.9734203826628468,
+      "std": 0.0
+    },
+    "weighted_f1": {
+      "mean": 0.9744741441928721,
+      "std": 0.0
+    },
+    "macro_precision": {
+      "mean": 0.970577342916636,
+      "std": 0.0
+    },
+    "macro_recall": {
+      "mean": 0.9767451196574343,
+      "std": 0.0
+    },
+    "f1_BENIGN": {
+      "mean": 0.9668483664164009,
+      "std": 0.0
+    },
+    "f1_DrDoS_LDAP": {
+      "mean": 0.9777585279178813,
+      "std": 0.0
+    },
+    "f1_DrDoS_MSSQL": {
+      "mean": 0.9403189038046795,
+      "std": 0.0
+    },
+    "f1_DrDoS_NetBIOS": {
+      "mean": 0.9979831352260525,
+      "std": 0.0
+    },
+    "f1_DrDoS_UDP": {
+      "mean": 0.9641442896241369,
+      "std": 0.0
+    },
+    "f1_Syn": {
+      "mean": 0.9934690729879292,
+      "std": 0.0
+    },
+    "roc_auc": {
+      "mean": 0.9974708919433065,
+      "std": 0.0
+    }
+  },
+  "val_per_seed": [
+    {
+      "accuracy": 0.9769,
+      "macro_f1": 0.9768338144956461,
+      "weighted_f1": 0.9768338144956461,
+      "macro_precision": 0.9770060615727308,
+      "macro_recall": 0.9769,
+      "f1_BENIGN": 0.9960902255639098,
+      "f1_DrDoS_LDAP": 0.9714901538160087,
+      "f1_DrDoS_MSSQL": 0.9378875673477687,
+      "f1_DrDoS_NetBIOS": 0.9903381642512077,
+      "f1_DrDoS_UDP": 0.9683916641738957,
+      "f1_Syn": 0.9968051118210862,
+      "roc_auc": 0.9969850306666667
+    }
+  ],
+  "test_per_seed": [
+    {
+      "accuracy": 0.9745954758271786,
+      "macro_f1": 0.9734203826628468,
+      "weighted_f1": 0.9744741441928721,
+      "macro_precision": 0.970577342916636,
+      "macro_recall": 0.9767451196574343,
+      "f1_BENIGN": 0.9668483664164009,
+      "f1_DrDoS_LDAP": 0.9777585279178813,
+      "f1_DrDoS_MSSQL": 0.9403189038046795,
+      "f1_DrDoS_NetBIOS": 0.9979831352260525,
+      "f1_DrDoS_UDP": 0.9641442896241369,
+      "f1_Syn": 0.9934690729879292,
+      "roc_auc": 0.9974708919433065
+    }
+  ],
+  "train_times_s": [
+    71.16273236274719
+  ],
+  "gate_logs": [
+    {}
+  ],
+  "best_val_macro_f1": 0.9768338144956461
+}
